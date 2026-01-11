@@ -4,6 +4,7 @@ import { Downloader } from "../core/downloader";
 import { createDownloadButton } from "../ui/downloadButton";
 import { buildStandardPackage } from "../core/package-builder";
 import {insertBlockedMessage} from "../ui/blocked-message";
+import {getExtFromURL} from "../core/utils";
 
 export class KnigavuheAdapter implements SiteAdapter {
     readonly name = "Knigavuhe";
@@ -113,7 +114,7 @@ export class KnigavuheAdapter implements SiteAdapter {
         const url = json?.book?.cover;
         if (!url) return undefined;
 
-        const ext = url.split("?")[0].split(".").pop() || "jpg";
+        const ext = getExtFromURL(url, "jpg");
         return { url, filename: `cover.${ext}` };
     }
 

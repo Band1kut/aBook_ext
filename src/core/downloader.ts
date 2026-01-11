@@ -1,5 +1,6 @@
 import { DownloadItem, DownloadPackage } from "./types";
 import { showErrorModal } from "../ui/errorModal";
+import {getExtFromURL} from "./utils";
 
 type ButtonState = "idle" | "downloading" | "done" | "abort";
 type SetStateFn = (state: ButtonState, text?: string) => void;
@@ -49,7 +50,8 @@ export class Downloader {
     }
 
     private buildFinalFilename(index: number, rawTitle: string, url: string): string {
-        const ext = url.split("?")[0].split(".").pop() || "mp3";
+        // const ext = url.split("?")[0].split(".").pop() || "mp3";
+        const ext = getExtFromURL(url, "mp3");
         const num = String(index + 1).padStart(2, "0");
 
         // Битое или пустое название → только номер
