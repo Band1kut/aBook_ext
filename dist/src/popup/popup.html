@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <title>Поиск книги</title>
+    <style>
+        body {
+            width: 250px;
+            padding: 10px;
+            font-family: sans-serif;
+        }
+        input {
+            width: 100%;
+            padding: 6px;
+            margin-bottom: 10px;
+        }
+        button {
+            width: 100%;
+            padding: 8px;
+            cursor: pointer;
+        }
+        a {
+            font-size: 14px;
+            color: #0077ff;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+    </style>
+  <script type="module" crossorigin src="/src/popup/popup.js"></script>
+</head>
+<body>
+<input id="bookInput" type="text" placeholder="Поиск книги" />
+<button id="searchBtn">Найти</button>
+
+<a id="supportedSitesLink">Поддерживаемые сайты</a>
+
+</body>
+</html>
