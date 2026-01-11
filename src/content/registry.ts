@@ -2,7 +2,7 @@
 import type { SiteAdapter } from "../core/types";
 
 import { AudioknigaOnlineAdapter } from "../sites/audiokniga-online";
-import { KnigavuheAdapter } from "../sites/knigavuhe";
+import { knigavuheAdapter } from "../sites/knigavuhe";
 import { AudioknigaOneAdapter } from "../sites/audiokniga-one";
 import { AudioknigiFunAdapter } from "../sites/audioknigi-fun";
 // ────────────────────────────────────────────────────────────────
@@ -11,7 +11,7 @@ import { AudioknigiFunAdapter } from "../sites/audioknigi-fun";
 
 const adapters: SiteAdapter[] = [
     AudioknigaOnlineAdapter,
-    KnigavuheAdapter,
+    knigavuheAdapter,
     AudioknigaOneAdapter,
     AudioknigiFunAdapter,
     // new AnotherSiteAdapter(), // ← просто добавляй строку

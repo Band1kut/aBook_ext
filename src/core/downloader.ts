@@ -43,12 +43,7 @@ export class Downloader {
 
     private isBrokenTitle(str: string): boolean {
         if (!str) return true;
-
-        const badPatterns = [
-            /Ð./g,
-            /Ñ./g,
-            /�/g,
-        ];
+        const badPatterns = [/Ð./g, /Ñ./g, /�/g];
 
         return badPatterns.some(re => re.test(str));
     }
@@ -63,11 +58,14 @@ export class Downloader {
         }
 
         const clean = this.sanitizeName(rawTitle);
-        if (!clean) {
-            return `${num}.${ext}`;
-        }
 
-        return `${num} ${clean}.${ext}`;
+        return clean ? `${num} ${clean}.${ext}` : `${num}.${ext}`;
+
+        // if (!clean) {
+        //     return `${num}.${ext}`;
+        // }
+        //
+        // return `${num} ${clean}.${ext}`;
     }
 
     // ----------------------------------------------------
