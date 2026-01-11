@@ -1,25 +1,28 @@
 // src/content/main.ts
+import { getCurrentAdapter } from "./registry";
 
-import type { SiteAdapter } from "../core/types";
-import { AudioknigaOnlineAdapter } from "../sites/audiokniga-online";
-import {KnigavuheAdapter} from "../sites/knigavuhe";
-import {AudioknigaOneAdapter} from "../sites/audiokniga-one";
-import {AudioknigiFunAdapter} from "../sites/audioknigi-fun";
+(function initialize() {
+    try {
+        const adapter = getCurrentAdapter();
 
-const adapters: SiteAdapter[] = [
-    AudioknigaOnlineAdapter,
-    KnigavuheAdapter,
-    AudioknigaOneAdapter,
-    AudioknigiFunAdapter
-];
+        if (!adapter) {
+            // Можно оставить тихий режим или логировать для разработки
+            // console.debug("[aBook] Нет подходящего адаптера для", location.hostname);
+            return;
+        }
 
-(function bootstrap() {
-    const url = window.location.href;
-    const adapter = adapters.find((a) => a.match(url));
+        console.log("[aBook] Адаптер найден:", adapter.name || "unnamed");
 
-    if (!adapter) {
-        return;
+        // Запускаем инициализацию (может быть синхронной или асинхронной)
+        const result = adapter.init();
+
+        // Если init возвращает Promise — дожидаемся
+        if (result instanceof Promise) {
+            result.catch((err) => {
+                console.error(`[${adapter.name || "adapter"}] Ошибка инициализации:`, err);
+            });
+        }
+    } catch (error) {
+        console.error("[aBook Content] Критическая ошибка при запуске:", error);
     }
-
-    adapter.init();
 })();

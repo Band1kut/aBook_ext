@@ -1,7 +1,6 @@
 import { SiteAdapter, DownloadPackage } from "../core/types";
 import { Downloader } from "../core/downloader";
 import { createDownloadButton } from "../ui/downloadButton";
-import { showErrorModal } from "../ui/errorModal";
 
 // --------------------------------------------------
 // ИЗВЛЕЧЕНИЕ JSON ИЗ BookController.enter()
@@ -179,7 +178,6 @@ function setupDownloadButton() {
         downloader.start(pkg); // downloader сам проверит пустой плейлист
     });
 
-    btn.style.marginTop = "12px";
 
     btn.addEventListener("abort-download", () => {
         if (downloader) {
@@ -199,19 +197,44 @@ function setupDownloadButton() {
 // --------------------------------------------------
 
 export const KnigavuheAdapter: SiteAdapter = {
-    match(url: string) {
-        return url.includes("knigavuhe.org");
+    name: "knigavuhe",
+    domains: ["knigavuhe.org/book/"],
+
+
+    // Основная проверка — только страницы книг!
+    match(url: string): boolean {
+        try {
+            const pathname = new URL(url).pathname;
+            return pathname.startsWith("/book/"); // ← вот это ключевое!
+            // Альтернативы, если структура URL другая:
+            // return pathname.startsWith("/audiobook/") || pathname.includes("/book/");
+        } catch {
+            return false;
+        }
     },
 
-    init() {
+    init(): void {
+        // Самая первая проверка — если не страница книги, выходим мгновенно
+        if (!this.match(window.location.href)) {
+            return;
+        }
+
+        // Если дошли сюда — это почти наверняка страница книги
+        // Запускаем основную логику
         setupDownloadButton();
 
-        new MutationObserver(() => setupDownloadButton()).observe(
-            document.body,
-            {
-                childList: true,
-                subtree: true,
-            }
-        );
+        // MutationObserver — только на страницах книг (экономия ресурсов)
+        const observer = new MutationObserver(() => {
+            setupDownloadButton();
+        });
+
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true,
+        });
+
+        // Опционально: отключить observer через какое-то время,
+        // если уверен, что кнопка вставлена навсегда
+        // setTimeout(() => observer.disconnect(), 15000);
     },
 };
